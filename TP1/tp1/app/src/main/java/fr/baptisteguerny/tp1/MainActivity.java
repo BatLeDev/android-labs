@@ -1,6 +1,8 @@
 package fr.baptisteguerny.tp1;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.ListView;
 
@@ -20,28 +23,36 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private EditText temperatureInput;
-    private TextView resultView;
-    private ListView historyListView;
-    private RadioButton celsiusRadioButton;
-    private Button convertButton;
     private ArrayList<HistoryElement> history = new ArrayList<>();
+
+    private EditText temperatureInput;
+    private RadioButton celsiusRadioButton;
+    private TextView resultView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        celsiusRadioButton = findViewById(R.id.celsius_switch);
         temperatureInput = findViewById(R.id.temperature_input);
         resultView = findViewById(R.id.output);
-        historyListView = findViewById(R.id.history_list);
-        celsiusRadioButton = findViewById(R.id.celsius_switch);
-        convertButton = findViewById(R.id.convert_button);
+
+        ListView historyListView = findViewById(R.id.history_list);
+        Button convertButton = findViewById(R.id.convert_button);
+        RadioGroup radioGroup = findViewById(R.id.radio_group);
 
         HistoryAdapter adapter = new HistoryAdapter();
         historyListView.setAdapter(adapter);
-
         restoreHistory();
+
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (celsiusRadioButton.isChecked()) {
+                temperatureInput.setHint(getString(R.string.celsius));
+            } else {
+                temperatureInput.setHint(getString(R.string.fahrenheit));
+            }
+        });
 
         convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,14 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean isCelsius = celsiusRadioButton.isChecked();
                 double sourceTemperature = Double.parseDouble(temperatureInput.getText().toString());
-                double outputTemperature;
-
-                if (isCelsius) {
-                    outputTemperature = (sourceTemperature * 9.0 / 5.0) + 32.0;
-                } else {
-                    outputTemperature = (sourceTemperature - 32.0) * 5.0 / 9.0;
-                }
-
+                double outputTemperature = isCelsius ? (sourceTemperature * 9.0 / 5.0) + 32.0 : (sourceTemperature - 32.0) * 5.0 / 9.0;
                 String unit = isCelsius ? "°F" : "°C";
                 double roundedOutputTemperature = Math.round(outputTemperature * 100.0) / 100.0;
 
@@ -68,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
                 temperatureInput.setText("");
 
                 HistoryElement historyElement = new HistoryElement(sourceTemperature, roundedOutputTemperature, isCelsius);
-                history.add(historyElement);
+                history.add(0, historyElement);
 
                 if (history.size() > 10) { // Limit history to 10 elements
-                    history.remove(0);
+                    history.remove(10);
                 }
                 saveHistory();
-                adapter.notifyDataSetChanged(); // Notify the adapter of the change
+                adapter.notifyDataSetChanged();
             }
 
             private void saveHistory() {
@@ -98,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         if (history == null) {
             history = new ArrayList<>();
         }
+    }
+
+    public void openGitHubLink(View view) {
+        String url = "https://github.com/BatLeDev/android-labs/blob/master/TP1/TP1.md";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     private class HistoryAdapter extends BaseAdapter {
