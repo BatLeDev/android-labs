@@ -41,4 +41,4 @@ Créer une application Android permettant de convertir une température en degr�
 
 ## Captures d'écran
 
-![Interface graphique](screenshots/interface.png)
+![Interface graphique](screenshots/interface.jpg)
