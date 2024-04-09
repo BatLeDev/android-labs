@@ -13,7 +13,7 @@ Le dépôt est divisé en plusieurs dossiers, chacun correspondant à un TP. Cha
 
 ## Liste des TPs
 
-- [TP1](TP1.md) : Convertisseur Celsius - Fahrenheit
+- [TP1](TP1/TP1.md) : Convertisseur Celsius - Fahrenheit
 
 ## Auteur
 
