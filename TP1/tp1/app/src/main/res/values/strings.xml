@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TP1</string>
+    <string name="input_text">Enter temperature</string>
+    <string name="input_hint">Temperature</string>
+    <string name="celsius">Celsius</string>
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="convert">Convert</string>
+    <string name="empty_output">Please enter a temperature</string>
+    <string name="history">History</string>
+    <string name="footer">Baptiste GUERNY - TP1</string>
+</resources>
